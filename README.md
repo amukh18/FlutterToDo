@@ -1,4 +1,4 @@
-#  A Todo App using the Flutter framework and BLoC pattern
+#  A to-do app using the Flutter framework and BLoC pattern
 
 This is a to-do app.
 
