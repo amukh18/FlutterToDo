@@ -18,6 +18,7 @@ class TaskCalendar extends StatelessWidget {
       formatAnimation: FormatAnimation.slide,
       startingDayOfWeek: StartingDayOfWeek.monday,
       availableGestures: AvailableGestures.all,
+      headerStyle: HeaderStyle(titleTextStyle: TextStyle(fontSize:20,color: Colors.white,fontWeight:FontWeight.bold),centerHeaderTitle: true),
       availableCalendarFormats: const {
         CalendarFormat.month: 'Month',
       },
@@ -35,7 +36,7 @@ class TaskCalendar extends StatelessWidget {
         weekdayStyle: TextStyle(color: Colors.white),
         weekendStyle: TextStyle(color: Colors.white),
       ),
-      headerVisible: false,
+      headerVisible: true,
       builders: CalendarBuilders(
         selectedDayBuilder: (context, date, _) {
           _taskBloc.add(LoadTasks(date));//TO LOAD TASKS OF SELECTED DAY
