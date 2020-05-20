@@ -4,10 +4,10 @@ This is a to-do app.
 
 ## Documentation
    - ![Flutter documentation](https://flutter.dev/docs)
-   - ![Hive documentation](https://docs.hivedb.dev/#/)
-   - ![table_calendar documentation](https://pub.dev/documentation/table_calendar/latest/table_calendar/table_calendar-library.html)
-   - ![flutter_bloc documentation](https://bloclibrary.dev/#/)
-   - ![flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications)
+   - ![Hive documentation - for local storage](https://docs.hivedb.dev/#/)
+   - ![table_calendar documentation - for the calendar](https://pub.dev/documentation/table_calendar/latest/table_calendar/table_calendar-library.html)
+   - ![flutter_bloc documentation - for state management using BLoC](https://bloclibrary.dev/#/)
+   - ![flutter_local_notifications- for local notifications](https://pub.dev/packages/flutter_local_notifications)
 
 ## To use the app on Android Studio
    1. Clone this repo to your computer.
