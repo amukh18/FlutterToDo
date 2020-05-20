@@ -3,14 +3,14 @@
 This is a to-do app.
 
 ## To use the app on Android Studio
-    1. Clone this repo to your computer.
-    2. Open the cloned directory on Android Studio
-    3. Run 'flutter pub get' to get the required dependencies
-    4. Run the main.dart file on either an AVD or an Android device connected by a USB cable.
+   1. Clone this repo to your computer.
+   2. Open the cloned directory on Android Studio
+   3. Run 'flutter pub get' to get the required dependencies
+   4. Run the main.dart file on either an AVD or an Android device connected by a USB cable.
 
 ### Navigating the calendar
-     Tap on a date to view its tasks
-    - Tap on either the left or the right arrows to view the previous or next month respectively.
+   - Tap on a date to view its tasks
+   - Tap on either the left or the right arrows to view the previous or next month respectively.
 
 
 ### To add a task
