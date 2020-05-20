@@ -27,6 +27,8 @@ dependencies:
   table_calendar: ^1.2.3
   flutter_bloc: ^1.0.0
   equatable: ^0.6.1
+  flutter_local_notifications: ^1.4.3
+
 
 
 
@@ -42,7 +44,7 @@ dev_dependencies:
 
 
 flutter_icons:
-  image_path: "assets/icon.png"
+  image_path: "assets/task_image.png"
   android: "launcher_icon"
   #new icon
 

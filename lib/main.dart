@@ -9,16 +9,28 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:irisassignment2/bloc/bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'model/task.dart';
 import 'package:irisassignment2/calendar.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+NotificationAppLaunchDetails notificationAppLaunchDetails;
+
 void main () async  {
 
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); //For both flutter_local notifications and Hive
   final directory = await getApplicationDocumentsDirectory();
-  Hive.init(directory.path);
+  Hive.init(directory.path); //Hive initialization
   Hive.registerAdapter(TaskAdapter());
-  await Hive.openBox(DateFormat.yMMMMd().format(DateTime.now()));
+  await Hive.openBox(DateFormat.yMMMMd().format(DateTime.now())); //Open today's box to load today's tasks
+
+  notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  var initializationSettingsAndroid = AndroidInitializationSettings('task_image');// Initialization with custom notification icon
+  var initializationSettingsIOS = IOSInitializationSettings();
+  var initializationSettings = InitializationSettings(initializationSettingsAndroid,initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -26,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Weather App',
-      home: BlocProvider<TaskBloc>(
+      home: BlocProvider<TaskBloc>( //To provide TaskBloc
         builder: (context) => TaskBloc(),
         child: FirstPage(),
       ),
@@ -38,16 +50,19 @@ class MyApp extends StatelessWidget {
 class FirstPage extends StatelessWidget {
   final TextEditingController controller1 = TextEditingController(); // for text field in addTaskDialog
   final TextEditingController controller2 = TextEditingController(); // for text field in updateTaskDialog
-  /* void initState()
-  {
-    super.initState();
-    _calendarController = CalendarController();
 
+ //To show notification
+  Future<void> _showNotification() async {
+    Box task = Hive.box(DateFormat.yMMMMd().format(DateTime.now()));
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'Todo App', 'You have ${task.length} tasks to complete today!', platformChannelSpecifics);
   }
-
-  */
-
-
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -59,16 +74,18 @@ class FirstPage extends StatelessWidget {
         body: Container(
           child: BlocBuilder<TaskBloc,TaskState>(
               builder:(context,state){
-                if(state is TaskInitial)
+                if(state is TaskInitial) //Initial state
                   {
+                    _showNotification();
+
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                       children:<Widget>[
                         Container(
                             margin: EdgeInsets.all(16.0),
-                            color: Colors.blue,
-                           child:TaskCalendar(),
+                            color: Colors.greenAccent,
+                           child:TaskCalendar(), //Calendar
                             ),
                        buildList(Hive.box(DateFormat.yMMMMd().format(DateTime.now())), DateTime.now())
                       ]
@@ -81,9 +98,9 @@ class FirstPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children:<Widget>[
                           Container(
-                              margin: EdgeInsets.all(16.0),
-                              color: Colors.blue,
-                              child:TaskCalendar(),
+                              margin: EdgeInsets.symmetric(vertical: 10.0),
+                              color: Colors.redAccent,
+                              child:TaskCalendar(),//Calendar
                   ),
                           buildList(state.task, state.date)
                         ]
@@ -97,49 +114,7 @@ class FirstPage extends StatelessWidget {
         )
       );
   }
-/*
-  @override
-  Widget build(BuildContext context) {
-     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text(
-              "Today : " + DateFormat.yMMMMd().format(DateTime.now())),
-        ),
-        body: Container(
-          child: BlocBuilder<TaskBloc, TaskState>(
-                builder: (context, state) {
-                  if (state is TaskInitial) {
-                    openTodayBox();
-                    return Column(
-                        children: <Widget>[
-                          TaskCalendar(_calendarController),
-                          buildList(Hive.box(DateFormat.yMMMMd().format(DateTime.now())), DateTime.now())
-                        ]
-                    );
-                  }
-                  else if (state is LoadedTasks) {
-                    return Column(children: <Widget>[
-                      TaskCalendar(_calendarController),
-                      buildList(state.task, state.date)
-                    ]);
-                  }
-                }
-            )
-          ,
 
-        ));
-  }
-
- */
-/*
-  @override
-  void dispose()
-  {
-
-  }
-
-   */
 
   Widget buildList(Box taskBox, DateTime date) {
 
@@ -168,12 +143,12 @@ class FirstPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.update),
+                            icon: Icon(Icons.update), //UPDATE TASK
                             onPressed: () {
-                              updateTaskDialog(context, index, taskBox, date,);
+                              updateTaskDialog(context, index, taskBox, date,); //OPEN NEW DIALOG
                             },),
                           IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Icons.delete), //DELETE TASK
                               onPressed: () {
                                 final taskbloc = BlocProvider.of<TaskBloc>(
                                     context);
@@ -190,63 +165,8 @@ class FirstPage extends StatelessWidget {
         });
   }
 
-/*
-  addTaskDialog(BuildContext context){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text('Add task'), //Dialog box with two options
-              content:Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children:<Widget>[
-                    Text('Enter task description:'),
-                    TextField(
-                      controller: controller1,
-                    ),
-                    Row(
-                        children: <Widget>[
-                          Container(
-                              margin: EdgeInsets.all(15.0),
-                              child: FlatButton(
-                                  child: Text('CONFIRM',
-                                    style:TextStyle(
-                                      fontSize: 17.0,),
-                                  ),
-                                  textColor: Colors.green,
-                                  onPressed: () {
-                                    addTask(Task(controller1.text));
-                                    Navigator.pop(context);
-                                  }
-                              )
 
-                          ),
-                          Container(
-                              margin: EdgeInsets.all(15.0),
-                              child: FlatButton(
-                                  child: Text('CANCEL',
-                                    style: TextStyle(
-                                        fontSize: 17.0),
-                                  ),
-                                  textColor: Colors.green,
-                                  onPressed:(){ //Don't add item
-                                    Navigator.pop(context);
-                                  }
-                              )
-                          )
-
-                        ]
-                    )
-
-                  ]
-              )
-          );
-        }
-    );
-
-  }
-  */
-
+//DIALOG BOX TO UPDATE TASK
   updateTaskDialog(BuildContext context, int index, Box tasks, DateTime date) {
     final taskbloc = BlocProvider.of<TaskBloc>(context);    //Dialog box to
     showDialog(
@@ -298,26 +218,7 @@ class FirstPage extends StatelessWidget {
   }
 }
 
-/*
-  }
-  deleteTask(int index,DateTime date){ //Delete task from database
-    final taskBox = Hive.box('tasks');
-    taskBox.deleteAt(index);
 
-  }
-
- */
-
-
-/*
-  addTask(Task task)//Add task to database
-  {
-    final taskBox = Hive.box('tasks');
-    taskBox.add(task);
-
-  }
-
- */
 
 
 

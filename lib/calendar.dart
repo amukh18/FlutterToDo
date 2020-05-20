@@ -10,15 +10,14 @@ class TaskCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TaskBloc _taskBloc = BlocProvider.of<TaskBloc>(context);
+    final TaskBloc _taskBloc = BlocProvider.of<TaskBloc>(context);//DECLARING TaskBloc TO USE SAME BLOC AS BEFORE
 
     return TableCalendar(
       locale: 'en_US',
-      // calendarController: _calendarController,
       initialCalendarFormat: CalendarFormat.month,
       formatAnimation: FormatAnimation.slide,
       startingDayOfWeek: StartingDayOfWeek.monday,
-      availableGestures: AvailableGestures.none,
+      availableGestures: AvailableGestures.all,
       availableCalendarFormats: const {
         CalendarFormat.month: 'Month',
       },
@@ -39,7 +38,7 @@ class TaskCalendar extends StatelessWidget {
       headerVisible: false,
       builders: CalendarBuilders(
         selectedDayBuilder: (context, date, _) {
-          _taskBloc.add(LoadTasks(date));
+          _taskBloc.add(LoadTasks(date));//TO LOAD TASKS OF SELECTED DAY
           return Container(
               margin: const EdgeInsets.all(6.0),
               width: 150,
@@ -54,9 +53,7 @@ class TaskCalendar extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: (){
-                  _taskBloc.add(LoadTasks(date));
-                },
+                onPressed: (){},
                 onLongPress: (){
                   final TextEditingController controller1 = TextEditingController();
                   showDialog(
