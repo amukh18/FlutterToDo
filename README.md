@@ -2,6 +2,12 @@
 
 This is a to-do app.
 
+## Documentation
+   - ![Flutter documentation](https://flutter.dev/docs)
+   - ![table_calendar documentation](https://pub.dev/documentation/table_calendar/latest/table_calendar/table_calendar-library.html)
+   - ![flutter_bloc documentation](https://bloclibrary.dev/#/)
+   - ![flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications)
+
 ## To use the app on Android Studio
    1. Clone this repo to your computer.
    2. Open the cloned directory on Android Studio
