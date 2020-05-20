@@ -27,6 +27,14 @@ To update a task's description
 
 To delete a task
   1. Tap on the trashcan icon in the task's tile.
+  
+UNABLE TO PROVIDE GIF OF APP RUNNING DUE TO ERROR WITH EMULATOR
+
+# SCREENSHOTS
+![](/imgs/sc4.jpg) ![](/imgs/sc2.jpg) ![](/imgs/sc3.jpg) ![](/imgs/sc1.jpg)
+
+
+
 
 
 
